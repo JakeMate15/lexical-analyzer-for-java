@@ -8,6 +8,8 @@ package Funciones;
 import java.io.*;
 import java.util.*;
 
+import javax.swing.plaf.nimbus.State;
+
 /**
  *
  * @author erikm
@@ -24,11 +26,13 @@ public class Lexical {
         private String info;
         private String temp;
         int lineNum;
+        private boolean finArch;
  
         public Lexical() {
                 info = "";
                 temp = "";
                 lineNum = 1;
+                finArch = false;
                 getChar();
 
                 analyze();
@@ -37,6 +41,7 @@ public class Lexical {
         }
 
         private void analyze() {
+
                 if (ch == '\uFFFF' && temp.equals(""))
                         return;
                 if (ch == '\n')
@@ -51,7 +56,6 @@ public class Lexical {
                                 cambioEstado(0);
                         } 
                         //Comentario
-                        
                         else if (ch == '/') {
                                 cambioEstadoCaracter(1);
                         }
@@ -129,6 +133,7 @@ public class Lexical {
                         } 
                         else {
                                 getChar();
+                                //System.out.println("Comentario infirnio");
                         }
                         break;
                 case 4: // Procesamiento de comentario
@@ -349,7 +354,7 @@ public class Lexical {
 
         private void escribeInfo(String value, String type) {
                 info += lineNum + " " + type + " " + value + "\r\n";
-                 estado = 0;
+                estado = 0;
         }
 
         private boolean esLetra(char ch) {
@@ -371,7 +376,6 @@ public class Lexical {
                 return false;
         }
     
-
         private boolean esOperador2(char ch) {
                 if (ch == '?' || ch == '.' || ch == ':')
                         return true;
@@ -386,7 +390,15 @@ public class Lexical {
         }
 
         private void error(int i) {
-                info = "Error de análisis léxico\r\nUbicación del error:" + i;
+                System.out.println(estado);
+                if(estado==-1){
+                        info += lineNum + " Comentario sin cierre\r\n";
+                }
+                else{
+                        info += lineNum + " Error\r\n" ; 
+                }
+                
+                //"Error de análisis léxico\r\nUbicación del error:" + i;
         }
 
         private void getChar() {
@@ -396,14 +408,21 @@ public class Lexical {
                                 fd = new FileReader("C:/Users/erikm/OneDrive/Escritorio/AnalizadorLexico/Main.java");
                         }
 
+                        
                         ch = (char) fd.read();
+                        //System.out.println("Antes erro " + (int) ch);
+
+                        if(ch > 255){
+                                estado = -1;
+                        }
 
                         if (ch == -1) { 
                                 // Al leer datos de un archivo, se devolverá un tipo int -1 al final de los datos para indicar el final
+                                //System.out.println("Fin del documetno");
                                 fd.close();
                         }
             } catch (IOException e) {
-
+                
             }
         }
 
