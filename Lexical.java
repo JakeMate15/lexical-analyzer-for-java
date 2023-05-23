@@ -19,6 +19,7 @@ public class Lexical {
     private String temp;
     int lineNum;
     private boolean finArch;
+    private int aux;
 
     public Lexical() {
         info = "";
@@ -27,12 +28,13 @@ public class Lexical {
         finArch = false;
         getChar();
 
-        analyze();
+        afd();
 
         write(info);
     }
 
-    private void analyze() {
+    private void afd() {
+        String val = "";
 
         if (ch == '\uFFFF' && temp.equals(""))
                 return;
@@ -51,16 +53,13 @@ public class Lexical {
                 else if (ch == '/') {
                         cambioEstadoCaracter(1);
                 }
-                //Numero 
+                //Numero decimal
                 else if (esDigito(ch)) {
                         cambioEstadoCaracter(5);
                 }
                 //Operadores >,<,/,*,= 
                 else if (esOperador1(ch)) {
                         cambioEstadoCaracter(8);
-                } 
-                else if (ch == '!') {
-                        cambioEstadoCaracter(9);
                 } 
                 //? . :
                 else if (esOperador2(ch)) {
@@ -72,9 +71,11 @@ public class Lexical {
                         escribeInfo((ch + ""), "Delimitador");
                         getChar();
                 } 
+                //strings
                 else if (ch == '"') {
                         cambioEstadoCaracter(10);
                 } 
+                //Identificadores con _
                 else if (esLetra(ch)) {
                         cambioEstadoCaracter(11);
                 } 
@@ -91,7 +92,7 @@ public class Lexical {
                         cambioEstadoCaracter(18);
                 } 
                 else if (ch == (char) -1) {
-                        // Terminar programa
+                        return;
                 } 
                 //Simbolo no valido
                 else {
@@ -99,11 +100,13 @@ public class Lexical {
                         return;
                 }
                 break;
-        case 1:
+        case 1: //Aceptacion 1 c9
                 if (ch == '/') {
+                        escribeInfo("Contenido","Comentario de una sola linea");
                         cambioEstado(2);
                 } 
                 else if (ch == '*') {
+                        escribeInfo("Inicio","Comentario de varias lineas");
                         cambioEstado(3);
                 } 
                 else {
@@ -116,10 +119,11 @@ public class Lexical {
                         getChar();
                 } 
                 else {
+                        temp+=ch;
                         getChar();
                 }
                 break;
-        case 3: // Procesamiento de comentario
+        case 3: // Procesamiento de comentario varias lineas
                 if (ch == '*') {
                         cambioEstado(4);
                 } 
@@ -128,64 +132,58 @@ public class Lexical {
                         //System.out.println("Comentario infirnio");
                 }
                 break;
-        case 4: // Procesamiento de comentario
+        case 4: // Aceptacion 2 c9
                 if (ch == '/') {
+                        escribeInfo("Fin","Comentario de varias lineas");
                         cambioEstado(0);
                 } 
                 else {
                         cambioEstado(3);
                 }
                 break;
-        case 5:
+        case 5: //Numeros con posibles errores
                 if (esDigito(ch)) {
                         temp += ch;
                         getChar();
                 } 
-                else {
-                        estado = 6;
-                }
-                break;
-        case 6:
-                if (ch == '.') {
+                else if (ch == '.' || ch=='E' || ch=='x' || esHex(ch) || ch=='e' ) {
                         cambioEstadoCaracter(7);
-                } 
-                else {
-                        escribeInfo(temp, "Numero");
+                }
+                else {  //Numero decimal u octal
+                        val = diccionario(temp);
+                        System.out.println(temp + " " + val);
+                        if(val.equals("error")){
+                                //System.out.println("Error en linea " + lineNum);
+                                System.out.println("Hola");
+                        }
+                        //else{
+                                escribeInfo(temp, val);
+                        //}
+                        
                 }
                 break;
         case 7:
-                if (esDigito(ch)) {
+                if (esDigito(ch) || ch == '.' || ch=='E' || ch=='x' || esHex(ch) || ch=='e'  || ch=='-' || ch=='+') {
                         cambioEstadoCaracter(13);
                 } else {
                         error(4);
                         return;
                 }
                 break;
-        case 8:
-                if (ch == '=') {
+        case 8: //Operadores con = c5 y c6
+                if (ch == '=') {//c5
                         temp += ch;
                         escribeInfo(temp, "Operador");
                         getChar();
                 } 
-                else {
+                else {//c6
                         escribeInfo(temp, "Operador");
                 }
                 break;
-        case 9:
-                if (ch == '=') {
-                        temp += ch;
-                        escribeInfo(temp, "Operador");
-                        getChar();
-                } 
-                else {
-                        error(2);
-                        return;
-                }
-                break;
-        case 10:
+        case 10://a7 Cedenas
                 if (ch == '"') {
                         temp += ch;
-                        escribeInfo(temp, "Numero");
+                        escribeInfo(temp, "Cadena");
                         getChar();
                 } 
                 else if (ch == '\\') {
@@ -199,7 +197,7 @@ public class Lexical {
                         cambioEstadoCaracter(10);
                 }
                 break;
-        case 11:
+        case 11://Palabras
                 if (esDigito(ch) || esLetra(ch) || ch == '_') {
                         cambioEstadoCaracter(11);
                 } 
@@ -207,21 +205,28 @@ public class Lexical {
                         estado = 12;
                 }
                 break;
-        case 12:
-                if (esReservada(temp)) {
+        case 12://Resevada o identifcador
+                if (esReservada(temp)) {//c7
                         escribeInfo(temp, "Reservada");
                         getChar();
-                } else {
+                } else {//c8
                         escribeInfo(temp, "Identificador");
                         getChar();
                 }
                 break;
         case 13:
-                if (esDigito(ch)) {
+                if (esDigito(ch) || ch == '.' || ch=='E' || ch=='x' || esHex(ch) || ch=='e'  || ch=='-' || ch=='+') {
                         cambioEstadoCaracter(13);
                 } 
                 else {
-                        escribeInfo(temp, "Numero");
+                        val = diccionario(temp);
+                        System.out.println(temp + " " + val);
+                        //if(val.equals("error")){
+                                //System.out.println("Error en linea " + lineNum);
+                        //}
+                        //else{
+                                escribeInfo(temp, val);
+                        //}
                 }
                 break;
         case 14:
@@ -247,7 +252,7 @@ public class Lexical {
                         cambioEstadoCaracter(14);
                 }
                 break;
-        case 16:
+        case 16://+ -
                 if (esDigito(ch)) {
                         cambioEstadoCaracter(5);
                 } 
@@ -275,12 +280,14 @@ public class Lexical {
                         escribeInfo(temp, "Operador");
                 }
                 break;
+        case 19://Octales y hexadecimales
+                break;
         default:
                 error(3);
                 return;
         }
 
-        analyze();
+        afd();
     }
 
     private boolean charLegal(String temp) {
@@ -363,26 +370,34 @@ public class Lexical {
     }
 
     private boolean esOperador1(char ch) {
-        if (ch == '/' || ch == '*' || ch == '=' || ch == '<' || ch == '>')
-            return true;
-        return false;
-    }
-
-    private boolean esOperador2(char ch) {
-        if (ch == '?' || ch == '.' || ch == ':')
+        if (ch == '/' || ch == '*' || ch == '=' || ch == '<' || ch == '>' || ch=='%' ||  ch=='!')           
                 return true;
-        return false;
-    }
-
-    private boolean esDigito(char ch) {
-        if (ch >= '0' && ch<='9')
-                return true;
-        else
+        else                                                                                    
                 return false;
     }
 
+    private boolean esOperador2(char ch) {
+        if (ch == '?' || ch == '.' || ch == ':')        return true;
+        else                                            return false;
+    }
+
+    private boolean esDigito(char ch) {
+        if (ch >= '0' && ch<='9')       return true;
+        else                            return false;
+    }
+
+    private boolean esOctal(char ch){
+        if(ch>=0 && ch<=7)      return true;
+        else                    return false;
+    }
+
+    private boolean esHex(char ch){
+        if( (ch>=0 && ch<=9 ) || (ch>='A' && ch<='F') ) return true;
+        else                                            return false;
+    }
+
     private void error(int i) {
-        System.out.println(estado);
+        //System.out.println(estado);
         if(estado==-1){
                 info += lineNum + " Comentario sin cierre\r\n";
         }
@@ -433,7 +448,168 @@ public class Lexical {
         }
     }
 
+    private int clasificarNumero(String numero) {
+        int estado = 0;
+        boolean esNegativo = false;
+
+        for (char c : numero.toCharArray()) {
+            //System.out.println(estado);
+            switch (estado) {
+                case 0:
+                    //hexadecimal u octal
+                    if (c == '0') {
+                        estado = 1;
+                    } 
+                    //Decimal
+                    else if (c >= '1' && c <= '9') {
+                        estado = 2;
+                    } 
+                    else if(c=='-' || c=='+'){
+                        continue;
+                    }
+                    else{
+                        return -1;
+                    }
+                    break;
+                case 1:
+                    //Hex
+                    if (c == 'x' || c == 'X') {
+                        estado = 7;
+                    } 
+                    //Octal
+                    else if (c >= '0' && c <= '7') {
+                        estado = 3;
+                    }
+                    else if(c=='.'){
+                        estado = 6;
+                    }
+                    else {
+                        return -1;
+                    }
+                    break;
+                case 2:
+                    //Decimal
+                    if (c >= '0' && c <= '9') {
+                        estado = 2;
+                    } 
+                    //Real
+                    else if (c == '.') {
+                        estado = 6;
+                    }
+                    else if(c=='-'){
+                        estado = 8;
+                    }
+                    else if (c == 'E' || c == 'e') {
+                        estado = 4;
+                    } 
+                    else {
+                        return -1;
+                    }
+                    break;
+                case 3:
+                    if (c >= '0' && c <= '7') {
+                        estado = 3;
+                    } 
+                    else{
+                        return -1;
+                    }
+                    break;
+                case 4:
+                    if (c >= '1' && c <= '9') {
+                        estado = 5;
+                    } 
+                    else {
+                        return -1;
+                    }
+                    break;
+                case 5:
+                    if (c >= '0' && c <= '9') {
+                        estado = 5;
+                    } 
+                    else{
+                        return -1;
+                    }
+                    break;
+                case 6:
+                    if (c >= '0' && c <= '9') {
+                        estado = 6;
+                    } 
+                    else if(c == 'E' || c == 'e'){
+                        estado = 9;
+                    }
+                    else{
+                        return -1;
+                    }
+                    break;
+                case 7:
+                    //Hex
+                    if( (c>='0' && c<='9') || (c>='A' && c<='F')){
+                        estado = 7;
+                    }
+                    else{
+                        return -1;
+                    }
+                    break;
+                case 9:
+                    if(c=='-' || c=='+'){
+                        estado = 4;
+                    }
+                    else{
+                        return -1;
+                    }
+                    break;
+                default:
+                    return -1;
+            }
+        }
+
+        //6: real sin exp
+        //3: Octal
+        //7: hexadeciaml
+        //2: entero deciaml
+        //5: real con exp
+        //0: Cero
+
+        return estado;
+    }
+
+    private String diccionario(String num){
+        int tipo = clasificarNumero(num);
+        String res = "";
+        switch(tipo){
+                case 0:
+                        res = "Entero decimal";
+                        break;
+                case 6: 
+                        res = "Real sin exponente";
+                        break;
+                case 3:
+                        res = "Octal";
+                        break;
+                case 7:
+                        res = "Hexadecimal";
+                        break;
+                case 2:
+                        res = "Entero decimal";
+                        break;
+                case 5:
+                        res = "Real con exp";
+                        break;
+                default:
+                        res = "error";
+                        break;
+        }
+        return res;
+        //6: real sin exp
+        //3: Octal
+        //7: hexadeciaml
+        //2: entero deciaml
+        //5: real con exp
+        //0: Decimal
+    }
+        
     public static void main(String[] args){
         new Lexical();
     }
+
 }
