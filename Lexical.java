@@ -102,11 +102,11 @@ public class Lexical {
                 break;
         case 1: //Aceptacion 1 c9
                 if (ch == '/') {
-                        escribeInfo("Contenido","Comentario de una sola linea");
+                        escribeInfo("Contenido","Comentario_1_lin");
                         cambioEstado(2);
                 } 
                 else if (ch == '*') {
-                        escribeInfo("Inicio","Comentario de varias lineas");
+                        escribeInfo("Inicio","Comentario_n_lin");
                         cambioEstado(3);
                 } 
                 else {
@@ -134,7 +134,7 @@ public class Lexical {
                 break;
         case 4: // Aceptacion 2 c9
                 if (ch == '/') {
-                        escribeInfo("Fin","Comentario de varias lineas");
+                        escribeInfo("Fin","Comentario_n_lin");
                         cambioEstado(0);
                 } 
                 else {
@@ -176,7 +176,8 @@ public class Lexical {
         case 10://a7 Cedenas
                 if (ch == '"') {
                         temp += ch;
-                        escribeInfo(temp, "Cadena");
+                        
+                        escribeInfo(temp.replaceAll("\\s", ""), "Cadena");
                         getChar();
                 } 
                 else if (ch == '\\') {
@@ -386,7 +387,7 @@ public class Lexical {
     private void error(int i) {
         //System.out.println(estado);
         if(estado==-1){
-                info += lineNum + " Comentario sin cierre\r\n";
+                info += (lineNum + " Comentario_sin_cierre" + "\tff\r\n");
         }
         else{
                 info += lineNum + " Error\r\n" ; 
@@ -486,7 +487,7 @@ public class Lexical {
                     else if(c=='-'){
                         estado = 8;
                     }
-                    else if (c == 'E' || c == 'e') {
+                    else if (c == 'E') {
                         estado = 4;
                     } 
                     else {
@@ -565,10 +566,10 @@ public class Lexical {
         String res = "";
         switch(tipo){
                 case 0:
-                        res = "Entero decimal";
+                        res = "Entero_decimal";
                         break;
                 case 6: 
-                        res = "Real sin exponente";
+                        res = "Real_sin_exponente";
                         break;
                 case 3:
                         res = "Octal";
@@ -577,10 +578,10 @@ public class Lexical {
                         res = "Hexadecimal";
                         break;
                 case 2:
-                        res = "Entero decimal";
+                        res = "Entero_decimal";
                         break;
                 case 5:
-                        res = "Real con exp";
+                        res = "Real_con_exp";
                         break;
                 default:
                         res = "error";

@@ -11,10 +11,11 @@ public class Main {
         
         int prueba != 1e9;
 
-        
+        /*
         for ( int i = 0; i <= 100; i ++ ) {
             prom += i;
         }
+        
         
         
         double pot_1 = 7.34E+1.4;

@@ -33,78 +33,28 @@
 6 Reservada double
 6 Identificador PI
 6 Operador =
-6 Real sin exponente 3.1416
+6 Real_sin_exponente 3.1416
 6 Delimitador ,
 6 Identificador CteGrav
 6 Operador =
-6 Real con exp -6.67E-19
+6 Real_con_exp -6.67E-19
 6 Delimitador ;
 7 Reservada float
 7 Identificador prom
 7 Operador =
 7 Delimitador (
 7 Reservada float
-7 Real sin exponente -0.5
+7 Real_sin_exponente -0.5
 7 Delimitador ;
 8 Reservada double
 8 Identificador val
 9 Identificador Calculos
 9 Identificador generales
-10 Comentario de una sola linea Contenido
+10 Comentario_1_lin Contenido
 12 Reservada int
 12 Identificador prueba
 12 Operador !=
-12 Real con exp 1e9
+12 error 1e9
 12 Delimitador ;
-15 Reservada for
-15 Delimitador (
-15 Reservada int
-15 Identificador i
-15 Operador =
-15 error 0
-15 Delimitador ;
-15 Identificador i
-15 Operador <=
-15 Entero decimal 100
-15 Delimitador ;
-15 Identificador i
-15 Operador +
-15 Operador +
-15 Delimitador )
-15 Delimitador {
-16 Identificador prom
-16 Operador +=
-16 Identificador i
-17 Delimitador }
-20 Reservada double
-20 Identificador pot_1
-20 Operador =
-20 error 7.34E+1.4
-20 Delimitador ;
-21 Identificador val
-21 Operador =
-21 Identificador CteGrav
-21 Operador *
-21 Identificador dato
-21 Operador *
-21 Identificador pot
-22 Identificador System
-22 Identificador out
-22 Identificador println
-22 Cadena "Prom = "
-22 Operador +
-22 Delimitador (
-22 Identificador prom
-22 Identificador PI
-22 Operador +
-22 Cadena " \nResult = "
-22 Operador +
-22 Delimitador (
-22 Identificador val
-22 Operador *
-22 error 0xAxB
-22 Delimitador )
-22 Delimitador )
-22 Delimitador ;
-24 Delimitador }
-25 Delimitador }
+14 Comentario_n_lin Inicio
+27 Comentario_sin_cierre	ff
