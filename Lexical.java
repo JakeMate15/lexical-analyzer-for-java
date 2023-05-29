@@ -151,14 +151,7 @@ public class Lexical {
                 }
                 else {  //Numero decimal u octal
                         val = diccionario(temp);
-                        System.out.println(temp + " " + val);
-                        if(val.equals("error")){
-                                //System.out.println("Error en linea " + lineNum);
-                                System.out.println("Hola");
-                        }
-                        //else{
-                                escribeInfo(temp, val);
-                        //}
+                        escribeInfo(temp, val);    
                         
                 }
                 break;
@@ -220,13 +213,7 @@ public class Lexical {
                 } 
                 else {
                         val = diccionario(temp);
-                        System.out.println(temp + " " + val);
-                        //if(val.equals("error")){
-                                //System.out.println("Error en linea " + lineNum);
-                        //}
-                        //else{
-                                escribeInfo(temp, val);
-                        //}
+                        escribeInfo(temp, val);    
                 }
                 break;
         case 14:
