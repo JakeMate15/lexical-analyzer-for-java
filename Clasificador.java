@@ -30,7 +30,7 @@ public class Clasificador {
                     //Octal
                     else if (c >= '0' && c <= '7') {
                         estado = 3;
-                    }
+                    }//Real
                     else if(c=='.'){
                         estado = 6;
                     }
@@ -114,12 +114,12 @@ public class Clasificador {
             }
         }
 
-        //6: real sin exp
-        //3: Octal
-        //7: hexadeciaml
-        //2: entero deciaml
-        //5: real con exp
         //1: Cero
+        //2: entero deciaml
+        //3: Octal
+        //5: real con exp
+        //6: real sin exp
+        //7: hexadeciaml
 
         return estado;
     }
