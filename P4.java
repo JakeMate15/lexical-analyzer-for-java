@@ -8,10 +8,10 @@ public class Main {
         float prom = (float) -0.5;
         float prom2 = (float) 0.0;
         double val;
-        /*Calculos generales; 
+        /*Calculos generales; */
         
-        int prueba = 1E9;
-
+        int prue#ba = 1E9;
+        
         
         for ( int i = 0; i <= 100; i ++ ) {
             prom += i;
