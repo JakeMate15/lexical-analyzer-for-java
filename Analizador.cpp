@@ -94,6 +94,7 @@ pair<bool,string> analiza(int linea){
         }
         else if(estado == 3){
             if(x == "Identificador")        return {false,"Identificador no valido"};
+            else if(x=="Operador")          estado = 1;
             else                            estado = 0;
         }
         else if(estado == 4){

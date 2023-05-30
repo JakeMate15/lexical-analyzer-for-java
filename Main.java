@@ -1,6 +1,6 @@
 public class Main {
     public static void main (String [] args){
-        int octal1 === -0123,octal2=0381;
+        int octal1 == = -0123, octal2=0371;
         int hexa2 = 0x1A;
         short dato = 12A12;
         double PI = 3.1416, CteGrav = -6.67E-19;

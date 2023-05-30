@@ -20,12 +20,14 @@ public class Lexical {
     int lineNum;
     private boolean finArch;
     private int aux;
+    private String nombre;
 
-    public Lexical() {
+    public Lexical(String nombre) {
         info = "";
         temp = "";
         lineNum = 1;
         finArch = false;
+        this.nombre = nombre;
         getChar();
 
         afd();
@@ -419,7 +421,7 @@ public class Lexical {
         try {
                 if (fd == null) {
                         //C:/Users/erikm/OneDrive/Escritorio/AnalizadorLexico/Main.java
-                        fd = new FileReader("Main.java");
+                        fd = new FileReader(nombre);
                 }
 
                 
@@ -495,7 +497,7 @@ public class Lexical {
     }
         
     public static void main(String[] args){
-        new Lexical();
+        new Lexical(args[0]);
     }
 
 }

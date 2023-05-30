@@ -19,7 +19,7 @@
 3 O -0123
 3 Delimitador ,
 3 Identificador octal2
-3 error 0381
+3 O 0371
 3 Delimitador ;
 4 Reservada int
 4 Identificador hexa2
