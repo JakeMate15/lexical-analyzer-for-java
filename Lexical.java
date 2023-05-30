@@ -11,7 +11,7 @@ public class Lexical {
         "class", "continue", "default", "do", "double", "else", "extends", "final", "finally", "float", "for", "if",
         "implements", "import", "instanceof", "int", "interface", "long", "native", "new", "package", "private",
         "protected", "public", "return", "short", "static", "super", "switch", "synchronized", "this", "throw",
-        "throws", "transient", "try", "void", "volatile", "while", "strictfp", "enum", "goto", "const", "assert" }; // 50
+        "throws", "transient", "try", "void", "volatile", "while", "strictfp", "enum", "goto", "const", "assert","System","out","println" }; // 53
     private FileReader fd;
     private int estado;
     private char ch;
@@ -353,7 +353,7 @@ public class Lexical {
     }
 
     private boolean esReservada(String temp2) {
-        for(int i = 0; i<50; i++){
+        for(int i = 0; i<53; i++){
                 if(paralabrasReservadas[i].equals(temp2))
                         return true;
         }
